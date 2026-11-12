@@ -94,7 +94,7 @@
   <!-- Hidden Input for Backup Restore -->
   <input type="file" id="restoreFileInput" accept=".json" class="hidden" onchange="handleRestoreBackup(event)">
 
-  <!-- Side Drawer Menu (القائمة الجانبية المحدثة) -->
+  <!-- Side Drawer Menu -->
   <div id="sideDrawerBackdrop" onclick="closeSideDrawer()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-40 hidden transition-opacity"></div>
   <aside id="sideDrawer" class="fixed top-0 right-0 h-full w-72 card-bg border-l border-slate-700 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between p-5 shadow-2xl">
     <div class="space-y-6">
@@ -114,7 +114,6 @@
       </div>
 
       <nav class="space-y-2.5 text-xs">
-        <!-- 1. الوضع الليلي -->
         <button onclick="toggleTheme()" class="w-full flex items-center justify-between p-3 rounded-xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700/70 font-bold transition">
           <span class="flex items-center gap-2.5 text-slate-200">
             <i id="themeIcon" class="fa-solid fa-sun text-amber-400 text-sm"></i>
@@ -123,25 +122,21 @@
           <span class="text-[10px] px-2 py-0.5 rounded bg-slate-900 text-amber-400">تبديل</span>
         </button>
 
-        <!-- 2. دفتر الخزينة والإيرادات اليومية -->
         <button onclick="openTreasuryModal()" class="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700/70 font-bold text-slate-200 transition">
           <i class="fa-solid fa-vault text-amber-400 text-sm"></i>
           <span>دفتر الخزينة والإيرادات اليومية</span>
         </button>
 
-        <!-- 3. إعدادات بيانات المعلم وكلمة المرور -->
-        <button onclick="openTeacherSettingsModal()" class="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700/70 font-bold text-slate-200 transition">
-          <i class="fa-solid fa-user-gear text-indigo-400 text-sm"></i>
+        <button onclick="openTeacherAuthCheckModal()" class="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700/70 font-bold text-slate-200 transition">
+          <i class="fa-solid fa-shield-halved text-indigo-400 text-sm"></i>
           <span>تعديل بيانات المعلم والباسورد</span>
         </button>
 
-        <!-- 4. مركز طباعة كشف الطلاب (PDF Print Center) -->
         <button onclick="openPrintCenterModal()" class="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700/70 font-bold text-slate-200 transition">
           <i class="fa-solid fa-print text-emerald-400 text-sm"></i>
           <span>طباعة كشف شامل للطلاب (PDF)</span>
         </button>
 
-        <!-- النسخ الاحتياطي -->
         <button onclick="downloadBackup()" class="w-full flex items-center gap-3 p-3 rounded-xl bg-slate-800/70 hover:bg-slate-800 border border-slate-700/70 font-bold text-slate-200 transition">
           <i class="fa-solid fa-download text-sky-400 text-sm"></i>
           <span>تنزيل نسخة احتياطية (Backup)</span>
@@ -321,7 +316,7 @@
     Created by Omar Hadwa | الدعم الفني 01013587867
   </footer>
 
-  <!-- Modal: Treasury / Daily Revenue (دفتر الخزينة اليومية) -->
+  <!-- Modal: Treasury / Daily Revenue -->
   <div id="treasuryModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
     <div class="card-bg rounded-2xl max-w-xl w-full p-6 space-y-4 border border-slate-700 shadow-2xl max-h-[90vh] flex flex-col">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3 flex-shrink-0">
@@ -339,7 +334,6 @@
         <i class="fa-solid fa-sack-dollar text-3xl text-slate-700"></i>
       </div>
 
-      <!-- نموذج تسجيل إيراد يوم جديد -->
       <form onsubmit="handleTreasurySubmit(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-2 flex-shrink-0">
         <div>
           <label class="block text-[11px] text-slate-400 mb-1">التاريخ</label>
@@ -356,11 +350,37 @@
         </div>
       </form>
 
-      <!-- سجل الأيام -->
       <div class="flex-grow overflow-y-auto space-y-2 pr-1 pt-2">
         <h4 class="font-bold text-xs text-slate-300">سجل إيرادات الأيام السابقة</h4>
         <div id="treasuryRecordsList" class="space-y-1.5"></div>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal: Teacher Auth Check (التحقق من كلمة المرور أولاً لزيادة الأمان) -->
+  <div id="teacherAuthCheckModal" class="fixed inset-0 bg-black/75 backdrop-blur-sm flex items-center justify-center p-4 z-50 hidden">
+    <div class="card-bg rounded-2xl max-w-md w-full p-6 space-y-4 border border-slate-700 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-slate-700 pb-3">
+        <h3 class="font-bold text-slate-100 flex items-center gap-2">
+          <i class="fa-solid fa-lock text-amber-400"></i> التحقق الأمني لتعديل البيانات
+        </h3>
+        <button onclick="closeTeacherAuthCheckModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+      </div>
+
+      <form onsubmit="handleTeacherAuthVerify(event)" class="space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-300 mb-1">أدخل كلمة المرور الحالية للتأكيد *</label>
+          <input type="password" id="checkTeacherPassword" required class="w-full p-2.5 rounded-xl input-style text-sm" placeholder="••••••••">
+        </div>
+        <div id="authCheckError" class="hidden text-red-400 text-xs bg-red-950/50 p-2 rounded-lg border border-red-800 text-center">
+          كلمة المرور غير صحيحة!
+        </div>
+
+        <div class="pt-2 flex justify-end space-x-2 space-x-reverse">
+          <button type="button" onclick="closeTeacherAuthCheckModal()" class="px-4 py-2 bg-slate-800 text-slate-300 text-xs font-bold rounded-xl hover:bg-slate-700">إلغاء</button>
+          <button type="submit" class="px-5 py-2 gold-gradient text-slate-900 text-xs font-bold rounded-xl hover:opacity-90">تحقق ومتابعة</button>
+        </div>
+      </form>
     </div>
   </div>
 
@@ -396,7 +416,7 @@
     </div>
   </div>
 
-  <!-- Modal: Print Center (مركز طباعة كشف الطلاب) -->
+  <!-- Modal: Print Center -->
   <div id="printCenterModal" class="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center p-4 z-50 hidden">
     <div class="card-bg rounded-2xl max-w-4xl w-full p-6 space-y-4 border border-slate-700 shadow-2xl max-h-[90vh] flex flex-col">
       <div class="flex items-center justify-between border-b border-slate-700 pb-3 flex-shrink-0">
@@ -424,7 +444,6 @@
         </select>
       </div>
 
-      <!-- محتوى الجدول القابل للطباعة -->
       <div class="flex-grow overflow-y-auto space-y-3 pr-1 bg-white text-slate-900 p-4 rounded-xl" id="printableTableContainer">
         <div class="text-center pb-3 border-b border-slate-200">
           <h2 id="printSheetTitle" class="text-lg font-bold">كشف طلاب سنتر MR</h2>
@@ -483,7 +502,6 @@
             <span id="profGradeBadge" class="text-xs px-2.5 py-1 rounded-full bg-slate-800 text-slate-300 border border-slate-700"></span>
           </div>
 
-          <!-- QR Code Container -->
           <div class="flex flex-col items-center justify-center bg-slate-950/60 p-4 rounded-xl border border-slate-800 my-2">
             <div id="qrcode" class="bg-white p-2 rounded-lg"></div>
             <span class="text-[11px] text-slate-400 mt-2">امسح الكود لتسجيل الحضور السريع</span>
@@ -508,7 +526,6 @@
           </button>
         </div>
 
-        <!-- التقرير الشهري للطالب وإرساله لولي الأمر واتساب -->
         <div class="bg-emerald-950/20 border border-emerald-800/50 p-4 rounded-xl space-y-2.5 no-print">
           <div class="flex items-center justify-between">
             <h4 class="font-bold text-emerald-400 text-xs flex items-center gap-1.5">
@@ -894,7 +911,7 @@
       document.getElementById('sideDrawer').classList.add('translate-x-full');
     }
 
-    // --- ميزة دفتر الخزينة والإيرادات اليومية ---
+    // --- دفتر الخزينة اليومية ---
     function loadTreasuryFromStorage() {
       try {
         treasuryData = JSON.parse(localStorage.getItem('mr_treasury_records') || '[]');
@@ -912,1037 +929,4 @@
     }
 
     function closeTreasuryModal() {
-      document.getElementById('treasuryModal').classList.add('hidden');
-    }
-
-    function handleTreasurySubmit(e) {
-      e.preventDefault();
-      const date = document.getElementById('treasuryDate').value;
-      const amount = Number(document.getElementById('treasuryAmount').value) || 0;
-
-      treasuryData.push({ id: 'tr_' + Date.now(), date, amount });
-      localStorage.setItem('mr_treasury_records', JSON.stringify(treasuryData));
-      
-      document.getElementById('treasuryAmount').value = '';
-      renderTreasuryRecords();
-      showToast('تم تسجيل إيراد اليوم في الخزينة بنجاح ✓');
-    }
-
-    function deleteTreasuryRecord(id) {
-      treasuryData = treasuryData.filter(t => t.id !== id);
-      localStorage.setItem('mr_treasury_records', JSON.stringify(treasuryData));
-      renderTreasuryRecords();
-      showToast('تم حذف السجل بنجاح');
-    }
-
-    function renderTreasuryRecords() {
-      const container = document.getElementById('treasuryRecordsList');
-      container.innerHTML = '';
-      let sum = 0;
-
-      if (treasuryData.length === 0) {
-        container.innerHTML = '<p class="text-xs text-slate-500 italic p-3 text-center">لا توجد إيرادات مسجلة حتى الآن.</p>';
-        document.getElementById('totalTreasurySum').textContent = '0 ج.م';
-        return;
-      }
-
-      // ترتيب تنازلي حسب التاريخ الأحدث
-      const sorted = [...treasuryData].sort((a, b) => new Date(b.date) - new Date(a.date));
-
-      sorted.forEach(item => {
-        sum += item.amount;
-        const div = document.createElement('div');
-        div.className = 'flex items-center justify-between bg-slate-900/60 p-2.5 rounded-xl border border-slate-800 text-xs';
-        div.innerHTML = `
-          <div class="flex items-center gap-3">
-            <span class="text-amber-400 font-bold"><i class="fa-regular fa-calendar ml-1"></i> ${item.date}</span>
-            <span class="text-emerald-400 font-bold">${item.amount.toLocaleString()} ج.م</span>
-          </div>
-          <button onclick="deleteTreasuryRecord('${item.id}')" class="text-slate-500 hover:text-red-400 transition" title="حذف"><i class="fa-solid fa-trash-can"></i></button>
-        `;
-        container.appendChild(div);
-      });
-
-      document.getElementById('totalTreasurySum').textContent = `${sum.toLocaleString()} ج.م`;
-    }
-
-    // --- إعدادات المعلم والباسورد ---
-    function openTeacherSettingsModal() {
-      closeSideDrawer();
-      document.getElementById('settingTeacherName').value = teacherConfig.name;
-      document.getElementById('settingTeacherEmail').value = teacherConfig.email;
-      document.getElementById('settingTeacherPassword').value = teacherConfig.password;
-      document.getElementById('teacherSettingsModal').classList.remove('hidden');
-    }
-
-    function closeTeacherSettingsModal() {
-      document.getElementById('teacherSettingsModal').classList.add('hidden');
-    }
-
-    function handleTeacherSettingsSave(e) {
-      e.preventDefault();
-      teacherConfig.name = document.getElementById('settingTeacherName').value.trim() || 'MR';
-      teacherConfig.email = document.getElementById('settingTeacherEmail').value.trim() || 'mr@gmail.com';
-      teacherConfig.password = document.getElementById('settingTeacherPassword').value.trim() || 'mora#70007#';
-
-      localStorage.setItem('mr_teacher_name', teacherConfig.name);
-      localStorage.setItem('mr_teacher_email', teacherConfig.email);
-      localStorage.setItem('mr_teacher_pass', teacherConfig.password);
-
-      loadTeacherIdentity();
-      closeTeacherSettingsModal();
-      showToast('تم تحديث إعدادات حساب المعلم بنجاح ✓');
-    }
-
-    // --- مركز طباعة كشف الطلاب ---
-    function openPrintCenterModal() {
-      closeSideDrawer();
-      document.getElementById('printGradeSelect').value = currentGrade;
-      renderPrintableTable();
-      document.getElementById('printCenterModal').classList.remove('hidden');
-    }
-
-    function closePrintCenterModal() {
-      document.getElementById('printCenterModal').classList.add('hidden');
-    }
-
-    function renderPrintableTable() {
-      const grade = document.getElementById('printGradeSelect').value;
-      const tbody = document.getElementById('printTableBody');
-      tbody.innerHTML = '';
-
-      const filtered = studentsData.filter(s => grade === 'all' || s.grade === grade);
-
-      document.getElementById('printSheetTitle').textContent = `كشف طلاب سنتر ${teacherConfig.name} - ${grade === 'all' ? 'جميع الصفوف' : gradeNames[grade]}`;
-
-      if (filtered.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="p-4 text-center text-slate-500 italic">لا يوجد طلاب مسجلين.</td></tr>';
-        return;
-      }
-
-      filtered.forEach(s => {
-        const tr = document.createElement('tr');
-        tr.className = 'border-b border-slate-200 hover:bg-slate-50';
-        tr.innerHTML = `
-          <td class="p-2 border border-slate-200 font-bold text-amber-600">${s.code || '1'}</td>
-          <td class="p-2 border border-slate-200 font-bold">${s.name}</td>
-          <td class="p-2 border border-slate-200">${gradeNames[s.grade]}</td>
-          <td class="p-2 border border-slate-200">${s.group_name || 'عام'}</td>
-          <td class="p-2 border border-slate-200 font-mono">${s.parent_phone}</td>
-        `;
-        tbody.appendChild(tr);
-      });
-    }
-
-    function downloadBackup() {
-      try {
-        const backupObj = {
-          app: 'MR_Student_Manager',
-          exported_at: new Date().toISOString(),
-          students: studentsData,
-          treasury: treasuryData
-        };
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backupObj, null, 2));
-        const downloadAnchor = document.createElement('a');
-        const dateTag = new Date().toISOString().split('T')[0];
-        downloadAnchor.setAttribute("href", dataStr);
-        downloadAnchor.setAttribute("download", `MR_Backup_${dateTag}.json`);
-        document.body.appendChild(downloadAnchor);
-        downloadAnchor.click();
-        downloadAnchor.remove();
-        closeSideDrawer();
-        showToast('تم تنزيل ملف النسخة الاحتياطية بنجاح ✓');
-      } catch (e) {
-        showToast('حدث خطأ أثناء تنزيل النسخة', 'error');
-      }
-    }
-
-    function triggerRestoreBackup() {
-      document.getElementById('restoreFileInput').click();
-    }
-
-    async function handleRestoreBackup(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = async (e) => {
-        try {
-          const parsed = JSON.parse(e.target.result);
-          const importedStudents = Array.isArray(parsed) ? parsed : parsed.students;
-          if (parsed.treasury) {
-            treasuryData = parsed.treasury;
-            localStorage.setItem('mr_treasury_records', JSON.stringify(treasuryData));
-          }
-          
-          if (!Array.isArray(importedStudents)) {
-            showToast('ملف النسخة الاحتياطية غير صالح!', 'error');
-            return;
-          }
-
-          if (!confirm(`سيتم استرجاع عدد (${importedStudents.length}) طالب من النسخة الاحتياطية. هل تريد المتابعة؟`)) {
-            event.target.value = '';
-            return;
-          }
-
-          studentsData = importedStudents;
-          localStorage.setItem('mr_students_backup', JSON.stringify(studentsData));
-          renderStudents();
-          closeSideDrawer();
-
-          if (navigator.onLine) {
-            const { error } = await supabaseClient.from('students').upsert(studentsData);
-            if (error) {
-              studentsData.forEach(s => addToOfflineQueue('upsert', s));
-              showToast('تم استرجاع البيانات محلياً وفي انتظار المزامنة', 'error');
-            } else {
-              showToast('تم رفع واسترجاع النسخة الاحتياطية ومزامنتها بالسحاب ✓');
-            }
-          } else {
-            studentsData.forEach(s => addToOfflineQueue('upsert', s));
-            showToast('تم استرجاع البيانات أوفلاين (ستُرفع عند عودة النت)', 'error');
-          }
-        } catch (err) {
-          showToast('تعذر قراءة الملف، تأكد من اختيار ملف JSON صحيح', 'error');
-        }
-        event.target.value = '';
-      };
-      reader.readAsText(file);
-    }
-
-    function hardResetLoginSession() {
-      localStorage.removeItem('mr_teacher_logged');
-      document.getElementById('loginEmail').value = teacherConfig.email;
-      document.getElementById('loginPassword').value = teacherConfig.password;
-      showToast('تمت إعادة ضبط الجلسة، اضغط تسجيل الدخول الآن');
-    }
-
-    window.addEventListener('online', () => {
-      updateConnectionBadge();
-      showToast('رجع الإنترنت! جاري إرسال التعديلات للسيرفر...');
-      processOfflineQueue(false);
-    });
-
-    window.addEventListener('offline', () => {
-      updateConnectionBadge();
-      showToast('أنت الآن بدون إنترنت - يتم الحفظ على الجهاز محلياً', 'error');
-    });
-
-    function updateConnectionBadge() {
-      const statusText = document.getElementById('syncStatusText');
-      if (!statusText) return;
-      const queue = getOfflineQueue();
-      if (navigator.onLine) {
-        statusText.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span> متصل بالسحاب ${queue.length > 0 ? `(في الانتظار: ${queue.length})` : ''}`;
-        statusText.className = "text-[11px] text-emerald-400 flex items-center gap-1";
-      } else {
-        statusText.innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-500 inline-block"></span> وضع أوفلاين (بدون نت) ${queue.length > 0 ? `- محفوظ: ${queue.length}` : ''}`;
-        statusText.className = "text-[11px] text-amber-400 flex items-center gap-1";
-      }
-    }
-
-    function showToast(message, type = 'success') {
-      const toast = document.getElementById('toastNotification');
-      toast.textContent = message;
-      toast.className = `fixed bottom-5 left-5 z-50 px-4 py-3 rounded-xl shadow-2xl text-xs font-bold flex items-center gap-2 transition-all duration-300 ${
-        type === 'error' ? 'bg-amber-900 text-amber-100 border border-amber-700' : 'bg-emerald-900 text-emerald-100 border border-emerald-700'
-      }`;
-      toast.classList.remove('hidden');
-      setTimeout(() => {
-        toast.classList.add('hidden');
-      }, 4000);
-    }
-
-    function checkAuthStatus() {
-      if (localStorage.getItem('mr_teacher_logged') === 'true') {
-        showDashboard();
-      } else {
-        showAuth();
-      }
-    }
-
-    function showAuth() {
-      document.getElementById('authScreen').classList.remove('hidden');
-      document.getElementById('dashboardScreen').classList.add('hidden');
-    }
-
-    function showDashboard() {
-      document.getElementById('authScreen').classList.add('hidden');
-      document.getElementById('dashboardScreen').classList.remove('hidden');
-      
-      const local = localStorage.getItem('mr_students_backup');
-      if (local) {
-        try {
-          studentsData = JSON.parse(local);
-          renderStudents();
-        } catch (e) {}
-      }
-      
-      selectGrade('1_prep');
-      if (navigator.onLine) {
-        processOfflineQueue(false);
-      }
-      setupRealtime();
-    }
-
-    async function handleLogin(e) {
-      e.preventDefault();
-      const email = document.getElementById('loginEmail').value.trim();
-      const password = document.getElementById('loginPassword').value.trim();
-      
-      if (email === teacherConfig.email && password === teacherConfig.password) {
-        localStorage.setItem('mr_teacher_logged', 'true');
-        showDashboard();
-      } else {
-        document.getElementById('authError').classList.remove('hidden');
-      }
-    }
-
-    function handleLogout() {
-      closeSideDrawer();
-      localStorage.removeItem('mr_teacher_logged');
-      showAuth();
-    }
-
-    function getOfflineQueue() {
-      try {
-        return JSON.parse(localStorage.getItem('mr_sync_queue') || '[]');
-      } catch (e) {
-        return [];
-      }
-    }
-
-    function addToOfflineQueue(actionType, payload) {
-      const queue = getOfflineQueue();
-      const filtered = queue.filter(item => item.id !== payload.id);
-      filtered.push({ type: actionType, id: payload.id, data: payload });
-      localStorage.setItem('mr_sync_queue', JSON.stringify(filtered));
-      updateConnectionBadge();
-    }
-
-    async function processOfflineQueue(manual = false) {
-      const syncIcon = document.getElementById('syncIcon');
-      if (manual && syncIcon) syncIcon.classList.add('fa-spin');
-
-      if (!navigator.onLine) {
-        if (manual) showToast('لا يوجد إنترنت حالياً، البيانات محفوظة بأمان على جهازك', 'error');
-        if (manual && syncIcon) syncIcon.classList.remove('fa-spin');
-        return;
-      }
-
-      const queue = getOfflineQueue();
-      if (queue.length > 0) {
-        const remaining = [];
-        for (const item of queue) {
-          try {
-            if (item.type === 'upsert') {
-              const { error } = await supabaseClient.from('students').upsert(item.data);
-              if (error) remaining.push(item);
-            } else if (item.type === 'delete') {
-              const { error } = await supabaseClient.from('students').delete().eq('id', item.id);
-              if (error) remaining.push(item);
-            }
-          } catch (e) {
-            remaining.push(item);
-          }
-        }
-        localStorage.setItem('mr_sync_queue', JSON.stringify(remaining));
-        if (remaining.length === 0) {
-          showToast('تم رفع ومزامنة كل التعديلات المحفوظة مع السيرفر ✓');
-        }
-      }
-
-      await loadStudents(manual);
-      updateConnectionBadge();
-      if (manual && syncIcon) syncIcon.classList.remove('fa-spin');
-    }
-
-    async function loadStudents(manual = false) {
-      if (!navigator.onLine) return;
-      try {
-        const { data, error } = await supabaseClient.from('students').select('*');
-        if (!error && data) {
-          const queue = getOfflineQueue();
-          if (queue.length === 0) {
-            studentsData = data;
-            localStorage.setItem('mr_students_backup', JSON.stringify(studentsData));
-            renderStudents();
-            if (activeProfileStudentId) renderProfileContent(activeProfileStudentId);
-          }
-          if (manual && queue.length === 0) showToast('البيانات محدثة بالكامل مع السيرفر ✓');
-        }
-      } catch (e) {}
-    }
-
-    function setupRealtime() {
-      supabaseClient
-        .channel('students-realtime-channel')
-        .on('postgres_changes', { event: '*', schema: 'public', table: 'students' }, () => {
-          if (navigator.onLine && getOfflineQueue().length === 0) {
-            loadStudents(false);
-          }
-        })
-        .subscribe();
-    }
-
-    async function saveStudentToSupabase(student) {
-      localStorage.setItem('mr_students_backup', JSON.stringify(studentsData));
-      
-      if (!navigator.onLine) {
-        addToOfflineQueue('upsert', student);
-        showToast('تم الحفظ أوفلاين (سيتم الرفع تلقائياً عند توفر النت)', 'error');
-        return;
-      }
-
-      try {
-        const { error } = await supabaseClient.from('students').upsert(student);
-        if (error) {
-          addToOfflineQueue('upsert', student);
-          showToast('تم الحفظ محلياً في انتظار المزامنة', 'error');
-        } else {
-          showToast('تم الحفظ والمزامنة مع السحابة ✓');
-        }
-      } catch (e) {
-        addToOfflineQueue('upsert', student);
-        showToast('تم الحفظ أوفلاين (سيتم الرفع عند عودة النت)', 'error');
-      }
-    }
-
-    function selectGrade(gradeKey) {
-      currentGrade = gradeKey;
-      document.querySelectorAll('.grade-tab').forEach(tab => {
-        tab.classList.remove('gold-gradient', 'text-slate-900');
-        tab.classList.add('bg-slate-800', 'text-slate-300');
-      });
-      const activeTab = document.getElementById(`tab_${gradeKey}`);
-      if (activeTab) {
-        activeTab.classList.remove('bg-slate-800', 'text-slate-300');
-        activeTab.classList.add('gold-gradient', 'text-slate-900');
-      }
-
-      document.getElementById('currentGradeTitle').textContent = gradeNames[gradeKey];
-      renderStudents();
-    }
-
-    function calculateFinancials() {
-      let currentGradeSum = 0;
-      let totalAllGradesSum = 0;
-
-      studentsData.forEach(s => {
-        const payments = s.payments || {};
-        let studentTotalPaid = 0;
-
-        Object.values(payments).forEach(p => {
-          if (p && p.is_paid) {
-            const amount = Number(p.amount) || Number(s.fee) || 150;
-            studentTotalPaid += amount;
-          }
-        });
-
-        totalAllGradesSum += studentTotalPaid;
-        if (s.grade === currentGrade) {
-          currentGradeSum += studentTotalPaid;
-        }
-      });
-
-      document.getElementById('gradeTotalAmount').textContent = `${currentGradeSum.toLocaleString()} ج.م`;
-      document.getElementById('allGradesTotalAmount').textContent = `${totalAllGradesSum.toLocaleString()} ج.م`;
-    }
-
-    function renderStudents() {
-      const grid = document.getElementById('studentsGrid');
-      const emptyState = document.getElementById('emptyState');
-      const search = document.getElementById('searchInput').value.trim().toLowerCase();
-
-      grid.innerHTML = '';
-      calculateFinancials();
-
-      const filtered = studentsData.filter(s => {
-        const matchesGrade = s.grade === currentGrade;
-        const matchesSearch = !search || s.name.toLowerCase().includes(search) || (s.code && String(s.code).toLowerCase().includes(search));
-        return matchesGrade && matchesSearch;
-      });
-
-      document.getElementById('studentCountBadge').textContent = `${filtered.length} طالب`;
-
-      if (filtered.length === 0) {
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      emptyState.classList.add('hidden');
-
-      filtered.forEach(s => {
-        const studentCode = s.code || '1';
-        const card = document.createElement('div');
-        card.className = 'card-bg rounded-xl p-4 border border-slate-700/80 hover:border-amber-500 transition cursor-pointer flex items-center justify-between shadow-sm group';
-        card.onclick = () => openProfileModal(s.id);
-        card.innerHTML = `
-          <div class="flex items-center space-x-3 space-x-reverse truncate">
-            <div class="w-10 h-10 rounded-lg bg-slate-900 border border-slate-700 flex flex-col items-center justify-center text-amber-400 group-hover:bg-amber-500 group-hover:text-slate-900 transition flex-shrink-0">
-              <span class="text-[10px] font-bold">كود</span>
-              <span class="text-xs font-extrabold">${studentCode}</span>
-            </div>
-            <div class="truncate">
-              <h4 class="font-bold text-white text-sm truncate group-hover:text-amber-400 transition">${s.name}</h4>
-              <span class="text-[11px] text-slate-400">مجموعة: ${s.group_name || 'عام'}</span>
-            </div>
-          </div>
-          <i class="fa-solid fa-chevron-left text-xs text-slate-500 group-hover:text-amber-400 transition"></i>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    function openProfileModal(studentId) {
-      activeProfileStudentId = studentId;
-      renderProfileContent(studentId);
-      document.getElementById('profileModal').classList.remove('hidden');
-    }
-
-    function renderProfileContent(studentId) {
-      const s = studentsData.find(x => x.id === studentId);
-      if (!s) return;
-
-      document.getElementById('profStudentName').textContent = s.name;
-      document.getElementById('profStudentCodeBadge').textContent = `كود: ${s.code || '1'}`;
-      document.getElementById('profStudentGroup').textContent = s.group_name || 'بدون مجموعة محددة';
-      document.getElementById('profGradeBadge').textContent = gradeNames[s.grade];
-      document.getElementById('profParentPhone').textContent = s.parent_phone;
-      document.getElementById('profStudentPhone').textContent = s.student_phone || 'غير مسجل';
-      document.getElementById('profFee').textContent = `${s.fee || 150} ج.م`;
-      document.getElementById('profWhatsappLink').href = `https://wa.me/2${s.parent_phone}`;
-
-      const currentMonth = String(new Date().getMonth() + 1);
-      const profMonthSelect = document.getElementById('profReportMonthSelect');
-      if (profMonthSelect) profMonthSelect.value = currentMonth;
-
-      const qrcodeContainer = document.getElementById('qrcode');
-      qrcodeContainer.innerHTML = '';
-      new QRCode(qrcodeContainer, {
-        text: String(s.code || '1'),
-        width: 120,
-        height: 120,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: QRCode.CorrectLevel.H
-      });
-
-      document.getElementById('profEditBtn').onclick = () => openEditStudentModal(s.id);
-      document.getElementById('profDeleteBtn').onclick = () => deleteStudent(s.id);
-      document.getElementById('profAttendanceBtn').onclick = () => openAttendanceModal(s.id);
-
-      const attList = document.getElementById('profAttendanceList');
-      const attendance = s.attendance || [];
-      const presentCount = attendance.filter(a => a.status === 'present').length;
-      const ratio = attendance.length > 0 ? Math.round((presentCount / attendance.length) * 100) : 100;
-      document.getElementById('profAttendanceRatio').textContent = `نسبة الحضور: ${ratio}% (${presentCount}/${attendance.length})`;
-
-      attList.innerHTML = '';
-      if (attendance.length === 0) {
-        attList.innerHTML = '<p class="text-xs text-slate-500 italic bg-slate-900/40 p-2.5 rounded-lg">لا توجد حصص مسجلة لهذا الطالب بعد.</p>';
-      } else {
-        attendance.slice().reverse().forEach((att, idx) => {
-          const realIdx = attendance.length - 1 - idx;
-          const div = document.createElement('div');
-          div.className = 'flex items-center justify-between bg-slate-900/70 hover:bg-slate-800 px-3 py-2 rounded-lg border border-slate-800 text-xs cursor-pointer transition';
-          div.title = 'اضغط لتعديل هذا السجل';
-          div.innerHTML = `
-            <div class="flex items-center gap-2 flex-grow" onclick="openAttendanceModal('${s.id}', ${realIdx})">
-              <span class="w-2 h-2 rounded-full ${att.status === 'present' ? 'bg-emerald-500' : 'bg-red-500'}"></span>
-              <span class="font-bold ${att.status === 'present' ? 'text-emerald-400' : 'text-red-400'}">${att.status === 'present' ? 'حاضر' : 'غائب'}</span>
-              <span class="text-slate-400 text-[11px]">(${att.date})</span>
-            </div>
-            <div class="flex items-center gap-3">
-              ${att.quiz ? `<span class="bg-indigo-950 text-indigo-300 px-2 py-0.5 rounded border border-indigo-800/60 font-bold" onclick="openAttendanceModal('${s.id}', ${realIdx})">التسميع: ${att.quiz}</span>` : '<span class="text-slate-600 text-[10px]" onclick="openAttendanceModal(\''+s.id+'\', '+realIdx+')">بدون تسميع</span>'}
-              <button onclick="event.stopPropagation(); deleteAttendanceRecord('${s.id}', ${realIdx})" class="text-slate-600 hover:text-red-400 transition" title="حذف السجل"><i class="fa-solid fa-xmark text-sm"></i></button>
-            </div>
-          `;
-          attList.appendChild(div);
-        });
-      }
-
-      const payList = document.getElementById('profPaymentsList');
-      payList.innerHTML = '';
-      const payments = s.payments || {};
-
-      for (let m = 1; m <= 12; m++) {
-        const paid = payments[m];
-        const isPaid = paid && paid.is_paid;
-        const paidAmount = isPaid ? (paid.amount || s.fee || 150) : '';
-
-        const btn = document.createElement('button');
-        btn.className = `p-2.5 rounded-xl border text-xs text-center flex flex-col items-center justify-center transition ${
-          isPaid 
-            ? 'bg-emerald-950/70 border-emerald-500 text-emerald-300 hover:bg-emerald-900/50' 
-            : 'bg-slate-900/70 border-slate-700 text-slate-300 hover:border-amber-500'
-        }`;
-        btn.onclick = () => openPaymentModal(s.id, m);
-        btn.innerHTML = `
-          <span class="font-bold text-sm">شهر ${m}</span>
-          <span class="text-[10px] mt-1 ${isPaid ? 'text-emerald-400 font-bold' : 'text-amber-400'}">
-            ${isPaid ? `مدفوع (${paidAmount} ج)` : 'اضغط للدفع +'}
-          </span>
-        `;
-        payList.appendChild(btn);
-      }
-    }
-
-    function sendStudentMonthlyWhatsApp() {
-      const s = studentsData.find(x => x.id === activeProfileStudentId);
-      if (!s) return;
-
-      const selectedMonth = document.getElementById('profReportMonthSelect').value;
-      const monthLabel = `${selectedMonth} (${monthNames[selectedMonth]})`;
-      const paddedMonth = selectedMonth.padStart(2, '0');
-
-      const allAttendance = s.attendance || [];
-      const monthRecords = allAttendance.filter(a => a.date && a.date.split('-')[1] === paddedMonth);
-      const recordsToReport = monthRecords.length > 0 ? monthRecords : allAttendance;
-
-      const presentCount = recordsToReport.filter(a => a.status === 'present').length;
-      const absentRecords = recordsToReport.filter(a => a.status === 'absent');
-      const absentCount = absentRecords.length;
-      const absentDates = absentRecords.map(a => a.date).join(' ، ');
-
-      const quizGrades = recordsToReport
-        .filter(a => a.quiz)
-        .map(a => `${a.quiz} (${a.date})`)
-        .join(' | ');
-
-      const payments = s.payments || {};
-      const monthPayment = payments[selectedMonth];
-      const isPaid = monthPayment && monthPayment.is_paid;
-      const paymentStatusText = isPaid
-        ? `تم سداد اشتراك الشهر بالكامل (${monthPayment.amount || s.fee || 150} ج.م) ✅`
-        : `لم يتم سداد اشتراك شهر ${monthLabel} حتى الآن (المطلوب: ${s.fee || 150} ج.م) ⚠️`;
-
-      let msg = `السلام عليكم ورحمة الله وبركاته 🌹\n`;
-      msg += `ولي أمر الطالب: *${s.name}* (كود: ${s.code || '1'})\n`;
-      msg += `الصف: ${gradeNames[s.grade]}\n`;
-      msg += `------------------\n`;
-      msg += `📊 *التقرير الشهري - شهر ${monthLabel}:*\n`;
-      msg += `• أيام الحضور: *${presentCount}* حصة\n`;
-      msg += `• أيام الغياب: *${absentCount}* حصة${absentCount > 0 ? ` (تواريخ الغياب: ${absentDates})` : ''}\n`;
-      msg += `• درجات التسميع: ${quizGrades || 'لا توجد درجات مسجلة'}\n`;
-      msg += `• حالة الاشتراك: ${paymentStatusText}\n`;
-      msg += `------------------\n`;
-      msg += `مع تحيات إدارة منصة *${teacherConfig.name}* 🎓`;
-
-      const cleanPhone = s.parent_phone.replace(/\D/g, '');
-      const waPhone = cleanPhone.startsWith('2') ? cleanPhone : `2${cleanPhone}`;
-      const url = `https://wa.me/${waPhone}?text=${encodeURIComponent(msg)}`;
-      window.open(url, '_blank');
-    }
-
-    function closeProfileModal() {
-      activeProfileStudentId = null;
-      document.getElementById('profileModal').classList.add('hidden');
-    }
-
-    function printStudentQR() {
-      window.print();
-    }
-
-    function openAttendanceModal(studentId, recordIndex = -1) {
-      const student = studentsData.find(s => s.id === studentId);
-      if (!student) return;
-
-      document.getElementById('attStudentId').value = studentId;
-      document.getElementById('attStudentName').value = student.name;
-      document.getElementById('attRecordIndex').value = recordIndex;
-
-      if (recordIndex >= 0 && student.attendance && student.attendance[recordIndex]) {
-        const record = student.attendance[recordIndex];
-        document.getElementById('attModalTitle').innerHTML = '<i class="fa-solid fa-pen-to-square text-amber-400"></i> تعديل سجل الحضور والتسميع';
-        document.getElementById('attStatus').value = record.status || 'present';
-        document.getElementById('attQuizGrade').value = record.quiz || '';
-        document.getElementById('attDate').value = record.date || new Date().toISOString().split('T')[0];
-      } else {
-        document.getElementById('attModalTitle').innerHTML = '<i class="fa-solid fa-clipboard-user text-amber-400"></i> تسجيل حضور وتسميع';
-        document.getElementById('attStatus').value = 'present';
-        document.getElementById('attQuizGrade').value = '';
-        document.getElementById('attDate').value = new Date().toISOString().split('T')[0];
-      }
-
-      document.getElementById('attendanceModal').classList.remove('hidden');
-    }
-
-    function closeAttendanceModal() {
-      document.getElementById('attendanceModal').classList.add('hidden');
-    }
-
-    async function handleAttendanceSubmit(e) {
-      e.preventDefault();
-      const studentId = document.getElementById('attStudentId').value;
-      const recordIndex = parseInt(document.getElementById('attRecordIndex').value);
-      const status = document.getElementById('attStatus').value;
-      const quiz = document.getElementById('attQuizGrade').value.trim();
-      const date = document.getElementById('attDate').value;
-
-      const student = studentsData.find(s => s.id === studentId);
-      if (student) {
-        if (!student.attendance) student.attendance = [];
-
-        if (recordIndex >= 0 && student.attendance[recordIndex]) {
-          student.attendance[recordIndex] = {
-            status,
-            quiz: quiz || null,
-            date
-          };
-          showToast('تم تحديث سجل الحضور بنجاح ✓');
-        } else {
-          student.attendance.push({
-            status,
-            quiz: quiz || null,
-            date
-          });
-          showToast(`تم تسجيل ${status === 'present' ? 'الحضور' : 'الغياب'} للطالب: ${student.name} ✓`);
-        }
-
-        closeAttendanceModal();
-        if (activeProfileStudentId) renderProfileContent(student.id);
-        await saveStudentToSupabase(student);
-      }
-    }
-
-    async function deleteAttendanceRecord(studentId, index) {
-      const student = studentsData.find(s => s.id === studentId);
-      if (student && student.attendance) {
-        student.attendance.splice(index, 1);
-        renderProfileContent(student.id);
-        await saveStudentToSupabase(student);
-        showToast('تم حذف سجل الحضور بنجاح');
-      }
-    }
-
-    function getNextCodeForGrade(gradeKey) {
-      let maxNum = 0;
-      studentsData.forEach(s => {
-        if (s.grade === gradeKey) {
-          const c = parseInt(s.code);
-          if (!isNaN(c) && c > maxNum) {
-            maxNum = c;
-          }
-        }
-      });
-      return String(maxNum + 1);
-    }
-
-    function openAddStudentModal() {
-      document.getElementById('editStudentId').value = '';
-      document.getElementById('modalStudentTitle').textContent = 'إضافة طالب جديد';
-      document.getElementById('newStudentGrade').value = currentGrade;
-      document.getElementById('newStudentCode').value = getNextCodeForGrade(currentGrade);
-
-      document.getElementById('newStudentName').value = '';
-      document.getElementById('newParentPhone').value = '';
-      document.getElementById('newStudentPhone').value = '';
-      document.getElementById('newStudentGroup').value = '';
-      document.getElementById('newStudentFee').value = 150;
-      document.getElementById('addStudentModal').classList.remove('hidden');
-    }
-
-    function onGradeChangeInModal() {
-      const selectedGrade = document.getElementById('newStudentGrade').value;
-      const editId = document.getElementById('editStudentId').value;
-      if (!editId) {
-        document.getElementById('newStudentCode').value = getNextCodeForGrade(selectedGrade);
-      }
-    }
-
-    function openEditStudentModal(studentId) {
-      const student = studentsData.find(s => s.id === studentId);
-      if (!student) return;
-
-      closeProfileModal();
-      document.getElementById('editStudentId').value = student.id;
-      document.getElementById('modalStudentTitle').textContent = 'تعديل بيانات الطالب';
-      document.getElementById('newStudentCode').value = student.code || '1';
-      document.getElementById('newStudentName').value = student.name || '';
-      document.getElementById('newParentPhone').value = student.parent_phone || '';
-      document.getElementById('newStudentPhone').value = student.student_phone || '';
-      document.getElementById('newStudentGrade').value = student.grade || currentGrade;
-      document.getElementById('newStudentGroup').value = student.group_name || '';
-      document.getElementById('newStudentFee').value = student.fee || 150;
-
-      document.getElementById('addStudentModal').classList.remove('hidden');
-    }
-
-    function closeAddStudentModal() {
-      document.getElementById('addStudentModal').classList.add('hidden');
-    }
-
-    async function handleAddStudent(e) {
-      e.preventDefault();
-      const editId = document.getElementById('editStudentId').value;
-      const inputCode = document.getElementById('newStudentCode').value.trim();
-      const inputName = document.getElementById('newStudentName').value.trim();
-      const targetGrade = document.getElementById('newStudentGrade').value;
-
-      const duplicateCode = studentsData.find(s => String(s.code) === inputCode && s.grade === targetGrade && s.id !== editId);
-      if (duplicateCode) {
-        showToast(`خطأ: الكود (${inputCode}) مستخدم بالفعل للطالب (${duplicateCode.name}) في هذا الصف!`, 'error');
-        return;
-      }
-
-      const duplicateName = studentsData.find(s => s.name.trim().toLowerCase() === inputName.toLowerCase() && s.grade === targetGrade && s.id !== editId);
-      if (duplicateName) {
-        showToast(`تنبيه: الطالب (${inputName}) مسجل مسبقاً في هذا الصف (كود: ${duplicateName.code})!`, 'error');
-        return;
-      }
-      
-      if (editId) {
-        const student = studentsData.find(s => s.id === editId);
-        if (student) {
-          student.code = inputCode || '1';
-          student.name = inputName;
-          student.parent_phone = document.getElementById('newParentPhone').value.trim();
-          student.student_phone = document.getElementById('newStudentPhone').value.trim();
-          student.grade = targetGrade;
-          student.group_name = document.getElementById('newStudentGroup').value.trim();
-          student.fee = Number(document.getElementById('newStudentFee').value) || 150;
-
-          closeAddStudentModal();
-          renderStudents();
-          openProfileModal(student.id);
-          await saveStudentToSupabase(student);
-          showToast('تم تحديث بيانات الطالب بنجاح ✓');
-        }
-      } else {
-        const newStudent = {
-          id: 'st_' + Date.now(),
-          code: inputCode || getNextCodeForGrade(targetGrade),
-          name: inputName,
-          parent_phone: document.getElementById('newParentPhone').value.trim(),
-          student_phone: document.getElementById('newStudentPhone').value.trim(),
-          grade: targetGrade,
-          group_name: document.getElementById('newStudentGroup').value.trim(),
-          fee: Number(document.getElementById('newStudentFee').value) || 150,
-          payments: {},
-          attendance: []
-        };
-
-        studentsData.push(newStudent);
-        renderStudents();
-        closeAddStudentModal();
-        document.getElementById('addStudentForm').reset();
-        await saveStudentToSupabase(newStudent);
-        showToast('تم حفظ الطالب الجديد بنجاح ✓');
-      }
-    }
-
-    function openScannerModal() {
-      document.getElementById('scannerModal').classList.remove('hidden');
-      setTimeout(() => {
-        html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-          { facingMode: "environment" },
-          { fps: 10, qrbox: { width: 250, height: 250 } },
-          (decodedText) => {
-            handleScannedCode(decodedText);
-          },
-          (errorMessage) => {}
-        ).catch(err => {
-          showToast('تعذر تشغيل الكاميرا، تأكد من إعطاء الصلاحية', 'error');
-        });
-      }, 300);
-    }
-
-    function closeScannerModal() {
-      if (html5QrCode) {
-        html5QrCode.stop().then(() => {
-          html5QrCode.clear();
-        }).catch(err => {}).finally(() => {
-          document.getElementById('scannerModal').classList.add('hidden');
-        });
-      } else {
-        document.getElementById('scannerModal').classList.add('hidden');
-      }
-    }
-
-    async function handleScannedCode(code) {
-      const cleanCode = code.trim();
-      const student = studentsData.find(s => String(s.code) === cleanCode && s.grade === currentGrade) || studentsData.find(s => String(s.code) === cleanCode);
-      
-      if (student) {
-        closeScannerModal();
-        const today = new Date().toISOString().split('T')[0];
-        if (!student.attendance) student.attendance = [];
-        
-        student.attendance.push({
-          status: 'present',
-          quiz: null,
-          date: today
-        });
-
-        await saveStudentToSupabase(student);
-        showToast(`تم تسجيل حضور الطالب: ${student.name} (كود: ${cleanCode}) بنجاح! ✓`);
-        openProfileModal(student.id);
-      } else {
-        showToast(`الكود (${cleanCode}) غير مسجل لأي طالب في هذا الصف!`, 'error');
-      }
-    }
-
-    async function deleteStudent(id) {
-      if (confirm('هل أنت متأكد من حذف هذا الطالب نهائياً؟')) {
-        studentsData = studentsData.filter(s => s.id !== id);
-        closeProfileModal();
-        renderStudents();
-        localStorage.setItem('mr_students_backup', JSON.stringify(studentsData));
-        
-        if (!navigator.onLine) {
-          addToOfflineQueue('delete', { id });
-          showToast('تم الحذف محلياً (سيُحذف من السيرفر عند عودة النت)', 'error');
-          return;
-        }
-
-        try {
-          await supabaseClient.from('students').delete().eq('id', id);
-          showToast('تم حذف الطالب بنجاح');
-        } catch (e) {
-          addToOfflineQueue('delete', { id });
-        }
-      }
-    }
-
-    function openPaymentModal(studentId, month) {
-      const student = studentsData.find(s => s.id === studentId);
-      if (!student) return;
-
-      document.getElementById('payStudentId').value = studentId;
-      document.getElementById('payStudentName').value = student.name;
-      document.getElementById('payMonthSelect').value = month;
-
-      const existingPayment = student.payments && student.payments[month];
-      document.getElementById('payAmountInput').value = existingPayment ? (existingPayment.amount || student.fee || 150) : (student.fee || 150);
-
-      const now = new Date();
-      now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-      document.getElementById('payTimestamp').value = now.toISOString().slice(0, 16);
-
-      document.getElementById('paymentModal').classList.remove('hidden');
-    }
-
-    function closePaymentModal() {
-      document.getElementById('paymentModal').classList.add('hidden');
-    }
-
-    async function handlePaymentSubmit(e) {
-      e.preventDefault();
-      const studentId = document.getElementById('payStudentId').value;
-      const month = document.getElementById('payMonthSelect').value;
-      const timestamp = document.getElementById('payTimestamp').value;
-      const amountPaid = Number(document.getElementById('payAmountInput').value) || 0;
-
-      const student = studentsData.find(s => s.id === studentId);
-      if (student) {
-        if (!student.payments) student.payments = {};
-        student.payments[month] = {
-          is_paid: true,
-          amount: amountPaid,
-          date: timestamp
-        };
-
-        closePaymentModal();
-        calculateFinancials();
-        if (activeProfileStudentId === student.id) {
-          renderProfileContent(student.id);
-        }
-
-        await saveStudentToSupabase(student);
-        showToast('تم تسجيل وإثبات الدفع بنجاح ✓');
-      }
-    }
-
-    function openReportModal() {
-      generateReport();
-      document.getElementById('reportModal').classList.remove('hidden');
-    }
-
-    function closeReportModal() {
-      document.getElementById('reportModal').classList.add('hidden');
-    }
-
-    function generateReport() {
-      const month = document.getElementById('reportMonthSelect').value;
-      const scope = document.getElementById('reportScopeSelect').value;
-
-      const filtered = studentsData.filter(s => scope === 'all' || s.grade === currentGrade);
-      const paidList = [];
-      const unpaidList = [];
-
-      filtered.forEach(s => {
-        const payments = s.payments || {};
-        const isPaid = payments[month] && payments[month].is_paid;
-
-        if (isPaid) {
-          paidList.push(s);
-        } else {
-          const unpaidMonths = [];
-          for (let m = 1; m <= month; m++) {
-            if (!payments[m] || !payments[m].is_paid) {
-              unpaidMonths.push(m);
-            }
-          }
-          const uniqueMonths = [...new Set(unpaidMonths)];
-          unpaidList.push({ student: s, unpaidMonths: uniqueMonths });
-        }
-      });
-
-      document.getElementById('paidCount').textContent = paidList.length;
-      document.getElementById('unpaidCount').textContent = unpaidList.length;
-
-      const unpaidContainer = document.getElementById('unpaidList');
-      unpaidContainer.innerHTML = '';
-      if (unpaidList.length === 0) {
-        unpaidContainer.innerHTML = '<p class="text-xs text-slate-500 italic py-2">لا يوجد طلاب متأخرين عن هذا الشهر 🎉</p>';
-      } else {
-        unpaidList.forEach(item => {
-          const s = item.student;
-          const monthsText = item.unpaidMonths.join(' و ');
-          const message = encodeURIComponent(`السلام عليكم ورحمة الله وبركاته، تحية طيبة لولي أمر الطالب (${s.name}) مع منصة ${teacherConfig.name}. نود تذكيركم بضرورة سداد المصروفات المتبقية عن شهر (${monthsText}). شاكرين تعاونكم.`);
-          
-          const div = document.createElement('div');
-          div.className = 'flex items-center justify-between card-bg p-3 rounded-xl border border-red-900/40 text-xs';
-          div.innerHTML = `
-            <div>
-              <div class="font-bold text-slate-100">${s.name} <span class="text-[10px] text-amber-400">(كود: ${s.code || '1'})</span></div>
-              <div class="text-red-400 mt-0.5">الشهور المستحقة عليه: <strong>شهر ${monthsText}</strong></div>
-              <div class="text-slate-400 text-[11px]">ولي الأمر: ${s.parent_phone}</div>
-            </div>
-            <a href="https://wa.me/2${s.parent_phone}?text=${message}" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg flex items-center space-x-1 space-x-reverse transition">
-              <i class="fa-brands fa-whatsapp"></i>
-              <span>تنبيه واتساب</span>
-            </a>
-          `;
-          unpaidContainer.appendChild(div);
-        });
-      }
-
-      const paidContainer = document.getElementById('paidList');
-      paidContainer.innerHTML = ``;
-      if (paidList.length === 0) {
-        paidContainer.innerHTML = '<p class="text-xs text-slate-500 italic py-2">لم يقم أي طالب بالسداد لهذا الشهر بعد.</p>';
-      } else {
-        paidList.forEach(s => {
-          const payInfo = s.payments[month];
-          const payDate = new Date(payInfo.date).toLocaleString('ar-EG', {month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'});
-          const paidAmount = payInfo.amount || s.fee || 150;
-
-          const div = document.createElement('div');
-          div.className = 'flex items-center justify-between card-bg p-3 rounded-xl border border-emerald-900/40 text-xs';
-          div.innerHTML = `
-            <div>
-              <div class="font-bold text-slate-100">${s.name} <span class="text-[10px] text-amber-400">(كود: ${s.code || '1'})</span></div>
-              <div class="text-emerald-400 mt-0.5">سدد مبلغ: <strong>${paidAmount} ج.م</strong> بتاريخ: ${payDate}</div>
-            </div>
-            <span class="text-emerald-400 bg-emerald-950/80 px-2.5 py-1 rounded-full border border-emerald-800/50">تم الدفع ✓</span>
-          `;
-          paidContainer.appendChild(div);
-        });
-      }
-    }
-  </script>
-</body>
-</html>
+      document.getElementById('treasuryModal
